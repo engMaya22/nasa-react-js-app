@@ -12,15 +12,29 @@ function App() {
   useEffect(()=>{
   
     async function fetAPIData(){
-
       const NAST_KEY = import.meta.env.VITE_NASA_API_KEY
       const url = 'https://api.nasa.gov/planetary/apod' + `?api_key=${NAST_KEY}`
-      console.log(url)
+      
+      //cash data
+      const today = (new Date()).toDateString();
+      const localKey = `NASA-${today}`;
+      if(localStorage.getItem(localKey)){
+        const apiData = JSON.parse(localStorage.getItem(localKey))
+        setData(apiData)
+        console.log('fetch from cash')
+        return;
+      }
+      localStorage.clear();
+
 
       try{
        const res =  await fetch(url);
        const apiData = await res.json();
+       localStorage.setItem(localKey , JSON.stringify(apiData))
        setData(apiData)
+       console.log('fetch from api')
+
+       console.log(data)
 
       }catch(err){
         console.log(err.message)
@@ -36,9 +50,9 @@ function App() {
   }
   return (
     <>
-       {showModal && (<SideBar handleToggleModal={handleToggleModal} />)}
-       {data ? (<Main />) : (<div className="loadingState"> <i className="fa-solid fa-gear"></i></div>)}
-       <Footer handleToggleModal={handleToggleModal}/>
+       {showModal && (<SideBar handleToggleModal={handleToggleModal} data={data} />)}
+       {data ? (<Main data={data} />) : (<div className="loadingState"> <i className="fa-solid fa-gear"></i></div>)}
+       {data && (<Footer handleToggleModal={handleToggleModal} data={data}/>)}
     </>
   )
 }

@@ -1,13 +1,13 @@
 
 
 
-const Footer = ({handleToggleModal})=>{
+const Footer = ({handleToggleModal ,data})=>{
     return (
         <footer>
             <div className="bgGradient"></div>
             <div>
-               <h2>The Brutal Martain Landscape </h2>
                <h1>APOD PROJECT</h1>
+               <h2> {data?.title} </h2>
             </div>
             <button>
              <i onClick={handleToggleModal} className="fa-solid fa-circle-info"></i>       
